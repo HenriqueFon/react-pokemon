@@ -7,6 +7,13 @@ interface ModalPokemonProps{
     onRequestClose:()=>void;
 }
 
+interface ModalPokemonDataProps{
+    id:number;
+    name:string;
+    order:string;
+    sprites:any;
+}
+
 export function PokemonModal({isOpen,onRequestClose}:ModalPokemonProps){
     return(
         <Modal
