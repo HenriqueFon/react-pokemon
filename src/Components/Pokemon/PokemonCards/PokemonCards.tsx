@@ -1,45 +1,27 @@
 import {PokemonModal} from '../../PokemonModal/PokemonModal';
 import {useState} from 'react';
+import {PokemonData} from '../Pokemon';
 
-interface PokemonUrl{
-    pokemons:{
-        id:number;
-        name:string;
-        order:string;
-        sprites:any;
-    }
-}
-interface PokemonModalProps{
+
+interface PokemonCardsProps{
     onOpenPokemon:()=>void;
+    pokemonData:PokemonData;
+    handleOpenPokemonModal:()=>void;
 }
 
-export function PokemonCards(props:PokemonUrl,{onOpenPokemon}:PokemonModalProps){
+export function PokemonCards({ pokemonData , onOpenPokemon,handleOpenPokemonModal }:PokemonCardsProps){
     
-    const id=props.pokemons.id;
-    const name=props.pokemons.name;
-    const order=props.pokemons.order;
-    const sprite=props.pokemons.sprites.front_default;
-
-    const [pokemonCliked,setPokemonClicked]=useState(false);
-
-    function handleOpenPokemonModal(){
-        setPokemonClicked(true);
-    }
-
-    function handleClosePokemonModal(){
-        setPokemonClicked(false);
-    }
-
+    const id=pokemonData.id;
+    const name=pokemonData.name;
+    const order=pokemonData.order;
+    const sprite=pokemonData.sprites.front_default;
+   
     return(
         <>
             <h1>{name}</h1>
             <li key={id}>{order}</li>
             <img src={sprite} alt={name}></img>
             <button type='button' onClick={handleOpenPokemonModal}>More</button>
-            <PokemonModal
-                isOpen={pokemonCliked}
-                onRequestClose={handleClosePokemonModal}
-            />
         </>
     )
 }

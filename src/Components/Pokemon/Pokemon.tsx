@@ -3,34 +3,62 @@ import { useEffect,useState } from "react";
 import {PokemonCards} from "./PokemonCards/PokemonCards"
 import {Header} from "../Header/Header";
 import { PokemonModal } from "../PokemonModal/PokemonModal";
-interface Pokemon{
+
+export interface PokemonData{
     id:number;
     name:string;
     order:string;
     sprites:any;
 }
 
-export function Pokemon(){
-  const [pokemon,setPokemon]=useState<Pokemon[]>([]);
+interface PokemonModalProps{
+  onOpenPokemon:()=>void;
+}
 
-  const getPokemonList=()=>{
-    
-    let pokemonArray: any[]=[];
-    for(let id=1;id<=151;id++){
-      fetch(`https://pokeapi.co/api/v2/pokemon/`+id)
+function makeRequest(id:number){
+  return new Promise((resolve,reject)=>{
+    fetch(`https://pokeapi.co/api/v2/pokemon/`+id)
       .then(res=>res.json())
       .then(data=>{
-        pokemonArray.push(data);
-        setPokemon(pokemonArray);
+        console.log(`https://pokeapi.co/api/v2/pokemon/`+id);
+        resolve(data);
       })
+  })
+}
+
+export function Pokemon(){
+  const [pokemon,setPokemon]=useState<PokemonData[]>([]);
+  const [currentPokemon,setCurrentPokemon]=useState<PokemonData>();
+
+  const  getPokemonList=()=>{
+    let request:any []=[];
+   
+    for(let id=1;id<=151;id++){
+      request.push(makeRequest(id));
     }
-    console.log(pokemonArray);
+    Promise.all(request)
+    .then((values)=>{
+      setPokemon(values);
+    }) 
+
+    
   }
 
   useEffect(()=>{
     getPokemonList();
   },[]); 
   
+  const [pokemonCliked,setPokemonClicked]=useState(false);
+
+    function handleOpenPokemonModal(pokemonData:PokemonData){
+        setPokemonClicked(true);
+        setCurrentPokemon(pokemonData)
+    }
+
+    function handleClosePokemonModal(){
+        setPokemonClicked(false);
+    }
+
   return(
     <>
       <Header/>
@@ -42,9 +70,15 @@ export function Pokemon(){
       <section className="Poke-List">
       {
         pokemon.map(results=>{
-          return(<PokemonCards pokemons={results}/>)
+          return(<PokemonCards pokemonData={results} onOpenPokemon={handleOpenPokemonModal}/>)
         })
       }
+      <PokemonModal
+                isOpen={pokemonCliked}
+                onRequestClose={handleClosePokemonModal}
+                pokemonData={currentPokemon}
+                handleOpenPokemonModal={handleOpenPokemonModal}
+            />
       </section>  
     </>
     );
