@@ -28,7 +28,7 @@ function makeRequest(id:number){
 
 export function Pokemon(){
   const [pokemon,setPokemon]=useState<PokemonData[]>([]);
-  const [currentPokemon,setCurrentPokemon]=useState<PokemonData>();
+  const [currentPokemon,setCurrentPokemon]=useState<PokemonData>({} as PokemonData);
 
   const  getPokemonList=()=>{
     let request:any []=[];
@@ -70,14 +70,13 @@ export function Pokemon(){
       <section className="Poke-List">
       {
         pokemon.map(results=>{
-          return(<PokemonCards pokemonData={results} onOpenPokemon={handleOpenPokemonModal}/>)
+          return(<PokemonCards pokemonData={results} handleOpenPokemonModal={handleOpenPokemonModal}/>)
         })
       }
       <PokemonModal
                 isOpen={pokemonCliked}
                 onRequestClose={handleClosePokemonModal}
                 pokemonData={currentPokemon}
-                handleOpenPokemonModal={handleOpenPokemonModal}
             />
       </section>  
     </>

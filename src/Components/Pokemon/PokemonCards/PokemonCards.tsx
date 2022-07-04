@@ -1,15 +1,12 @@
-import {PokemonModal} from '../../PokemonModal/PokemonModal';
-import {useState} from 'react';
 import {PokemonData} from '../Pokemon';
 
 
 interface PokemonCardsProps{
-    onOpenPokemon:()=>void;
     pokemonData:PokemonData;
-    handleOpenPokemonModal:()=>void;
+    handleOpenPokemonModal:(pokemonData:PokemonData)=>void;
 }
 
-export function PokemonCards({ pokemonData , onOpenPokemon,handleOpenPokemonModal }:PokemonCardsProps){
+export function PokemonCards({ pokemonData , handleOpenPokemonModal }:PokemonCardsProps){
     
     const id=pokemonData.id;
     const name=pokemonData.name;
@@ -21,7 +18,7 @@ export function PokemonCards({ pokemonData , onOpenPokemon,handleOpenPokemonModa
             <h1>{name}</h1>
             <li key={id}>{order}</li>
             <img src={sprite} alt={name}></img>
-            <button type='button' onClick={handleOpenPokemonModal}>More</button>
+            <button type='button' onClick={()=>handleOpenPokemonModal(pokemonData)}>More</button>
         </>
     )
 }
